@@ -1,0 +1,145 @@
+/* Creación de la Base de Datos FACTURACION */
+CREATE DATABASE FACTURACION;
+
+/* Especificar el uso de la Base de Datos ya creada para ejecutar los scripts siguientes */
+USE FACTURACION;
+
+/* Creación de la tabla Clientes con las columnas de ID (Primary Key), Nombre, Apellido, Empresa, Telefono, Correo, Direccion, Ciudad y Pais. */
+CREATE TABLE Clientes ( ID_Cliente INT PRIMARY KEY, 
+Nombre NVARCHAR(30) not null,
+Apellido NVARCHAR(50) not null,
+Empresa NVARCHAR(50) null,
+Telefono NVARCHAR(20) not null,
+Correo NVARCHAR(100) not null,
+Direccion NVARCHAR(50) null,
+Ciudad NVARCHAR(30) null,
+Pais NVARCHAR(50) null);
+
+/* Creación de la tabla Departamento con las columnas de ID (Primary Key) y Nombre. */
+CREATE TABLE Departamento ( ID_Departamento INT PRIMARY KEY, 
+Nombre NVARCHAR(30) not null);
+
+/* Creación de la tabla Categoria con las columnas de ID (Primary Key), ID Departamento (Foreign Key) y Nombre. */
+CREATE TABLE Categoria ( ID_Categoria INT PRIMARY KEY, 
+ID_Departamento int FOREIGN KEY REFERENCES Departamento(ID_Departamento),
+Nombre NVARCHAR(30) not null,);
+
+/* Creación de la tabla Inventario con las columnas de ID (Primary Key), Descripcion, ID Departamento (Foreign Key), ID Categoria (Foreign Key), Precio, Costo y Cantidad. */
+CREATE TABLE Inventario ( ID_Producto INT PRIMARY KEY, 
+Descripcion NVARCHAR(40) not null,
+ID_Departamento int FOREIGN KEY REFERENCES Departamento(ID_Departamento),
+ID_Categoria int FOREIGN KEY REFERENCES Categoria(ID_Categoria),
+Precio MONEY not null,
+Costo MONEY not null,
+Cantidad FLOAT not null);
+
+/* Creación de la tabla Empleados con las columnas de ID (Primary Key), Nombre, Apellido, Telefono, Correo y Contraseña. */
+CREATE TABLE Empleados ( ID_Empleado INT PRIMARY KEY, 
+Nombre NVARCHAR(30) not null,
+Apellido NVARCHAR(50) not null,
+Telefono NVARCHAR(20) not null,
+Correo NVARCHAR(100) not null,
+Contraseña NVARCHAR(512) null);
+
+/* Creación de la tabla Ventas con las columnas de ID (Primary Key), ID Cliente (Foreign Key), ID Empleado (Foreign Key) y Total. */
+CREATE TABLE Ventas ( ID_Venta INT PRIMARY KEY, 
+ID_Cliente int FOREIGN KEY REFERENCES Clientes(ID_Cliente),
+ID_Empleado int FOREIGN KEY REFERENCES Empleados(ID_Empleado),
+Total MONEY not null);
+
+/* Creación de la tabla Detalle de Ventas con las columnas de ID (Primary Key), ID Venta (Foreign Key), ID Producto (Foreign Key), Precio, Costo, Cantidad y Fecha. */
+CREATE TABLE Detalle_Ventas ( ID_Detalle INT PRIMARY KEY, 
+ID_Venta int FOREIGN KEY REFERENCES Ventas(ID_Venta),
+ID_Producto int FOREIGN KEY REFERENCES Inventario(ID_Producto),
+Precio MONEY not null,
+Costo MONEY not null,
+Cantidad FLOAT not null,
+Fecha DATETIME not null);
+
+
+/* Insertar datos en las tablas */
+
+/* Insertar datos de la tabla Clientes. */
+INSERT INTO Clientes
+VALUES(1, 'Jorge Grabriel', 'Taveras Santana',null, '809-481-8562', 'jtaveras@gmail.com', 'Calle Primera Residencial Carmen Maria', 'Santo Domingo','República Dominicana'),
+(2, 'Claire', 'Roder',null, '49-162-9875587', 'c.easy@outlook.com', 'Herdweg 36-48 70174', 'Stuttgart', 'Alemania'),
+(3, 'Alberto', 'Alonso Rodríguez', 'Agilisa Tecnologies', '809-880-9874','aalonso@bcpos.com.do', 'Calle Gala #13', 'Santo Domingo', 'República Dominicana'),
+(4, 'Ameer', 'Ali','EZ Software', '347-495-8521', 'ameer.ali@ezsoftware.com', '947 Brinsmade Av Bronx', 'Nueva York', 'Estados Unidos'),
+(5, 'Pedro', 'Gonzalez', 'Cerámicas FG', '809-875-8965', 'recepcion@cfg.com', 'Av. John F. Kennedy 57', 'Santo Domingo', 'República Dominicana'),
+(6, 'Luis Marino', 'Tejada García', 'Business Computer POS', '809-567-8752', 'ltejada@bcpos.com', 'Plaza Castellana local 456', 'Santo Domingo', 'República Dominicana'),
+(7, 'Joel Florentino', 'Pérez Bueno', null, '809-856-2541', 'f.joel@gmail.com', 'Calle Federizo Gomez #47', 'Satiago', 'República Dominicana'),
+(8, 'Camila', 'Grullón', 'Alpha Group', '829-354-8988', 'camila@alpha.com', 'Plaza Central local 101', 'Santo Domingo', 'República Dominicana'),
+(9, 'Nicole', 'Cortines', 'Grupo Marti', '809-564-5469', 'ncortines@marti.com.do', 'Avenida Winston Churchill', 'Santo Domingo', 'República Dominicana'),
+(10, 'Marcos Rafael', 'De La Cruz', 'Repuestos Pepín','809-380-9633', 'mrcruz@gmail.com', 'Marginal Gonzalez esquina Calle 21', 'Bani', 'República Dominicana');
+
+/* Insertar datos de la tabla Departamento. */
+INSERT INTO Departamento
+VALUES(1, 'Retail'),
+(2, 'Hospitalidad'),
+(3, 'Contabilidad'),
+(4, 'Produccion');
+
+/* Insertar datos de la tabla Categoria. */
+INSERT INTO Categoria
+VALUES(1, 1, 'Terminal'),
+(2, 1, 'En linea'),
+(3, 1, 'Kiosko'),
+(4, 2, 'Movil'),
+(5, 2, 'Terminal'),
+(6, 2, 'En linea'),
+(7, 3, 'Terminal'),
+(8, 3, 'En Linea'),
+(9, 4, 'Movil'),
+(10, 4, 'Terminal');
+
+/* Insertar datos de la tabla Inventario. */
+INSERT INTO Inventario
+VALUES(1, 'Dynamic POS', 1, 1, 48000, 23000, 25),
+(2, 'Retail Square', 1, 2, 38000, 17000, 20),
+(3, 'Axana Retail', 1, 2, 35000, 28000, 30),
+(4, 'Axana Retail Movil', 1, 4, 28000, 15000, 55),
+(5, 'NRC Ohana POS', 2, 4, 80000, 41000, 30),
+(6, 'FastFood POS', 2, 5, 80000, 45000, 25),
+(7, 'MicroFast POS', 2, 5, 90000, 43000, 31),
+(8, 'Food Movil POS', 2, 6, 75000, 31800, 10),
+(9, 'Asistente contable', 3, 7, 28000, 11800, 18),
+(10, 'Bongo virtual', 3, 8, 41000, 29500, 20),
+(11, 'Deliver Dash', 4, 9, 55000, 23600, 25),
+(12, 'POST Produccion', 4, 10, 27000, 11200, 20);
+
+/* Insertar datos de la tabla Empleados. */
+INSERT INTO Empleados
+VALUES(1, 'Rey Adonis', 'De La Paz Montaño', '829-974-9174', 'reyadonisdelapaz@hotmail.com', null),
+(2, 'Gilbert', 'Duarte', '809-875-8654', 'gilbert.duarte@hotmail.com', null);
+
+/* Insertar datos de la tabla Ventas. */
+INSERT INTO Ventas
+VALUES(1, 2, 1, 70000),
+(2, 1, 2, 86000),
+(3, 8, 2, 80000),
+(4, 10, 2, 168000),
+(5, 5, 1, 137000),
+(6, 3, 1, 41000),
+(7, 1, 1, 90000),
+(8, 6, 2, 69000),
+(9, 4, 2, 96000),
+(10, 5, 1, 170000);
+
+
+/* Insertar datos de la tabla Detalle de Ventas. */
+INSERT INTO Detalle_Ventas
+VALUES(1, 1, 3, 35000, 28000, 2, '08-24-20'),
+(2, 2, 1, 48000, 23000, 1, '08-25-20'),
+(3, 2, 2, 38000, 17000, 1, '08-25-20'),
+(4, 3, 5, 80000, 41000, 1, '08-25-20'),
+(5, 4, 9, 28000, 11800, 6, '08-26-20'),
+(6, 5, 11, 55000, 23600, 2, '08-27-20'),
+(7, 5, 12, 27000, 11200, 1, '08-27-20'),
+(8, 6, 10, 41000, 29500, 1, '08-27-20'),
+(9, 7, 7, 90000, 43000, 1, '08-27-20'),
+(10, 8, 9, 28000, 11800, 1, '08-28-20'),
+(11, 8, 10, 41000, 29500, 1, '08-28-20'),
+(12, 9, 1, 48000, 23000, 2, '08-28-20'),
+(13, 10, 6, 80000, 45000, 1, '08-29-20'),
+(14, 10, 7, 90000, 43000, 1, '08-29-20');
+
